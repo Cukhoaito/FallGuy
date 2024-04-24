@@ -84,24 +84,15 @@ namespace FallGuy.Character
         private void OnDrawGizmos()
         {
             const float boxHeight = .05f;
+            var color = IsGrounded ? Color.green : Color.red;
+            Gizmos.color = color;
             var bounds = _collider.bounds;
 
             var boxCenter = bounds.center;
             var halfExtents = bounds.extents;
-
+            var extentY = halfExtents.y;
             halfExtents.y = boxHeight;
-            var maxDistance = bounds.extents.y;
-            Physics.BoxCast(
-                boxCenter,
-                halfExtents,
-                Vector3.down,
-                out var hit,
-                transform.rotation,
-                maxDistance,
-                _platformLayer
-            );
-            if (hit.collider == null) return;
-            Gizmos.DrawWireCube(boxCenter + Vector3.down * hit.distance, halfExtents * 2);
+            Gizmos.DrawWireCube(boxCenter - new Vector3(0, extentY + boxHeight, 0), halfExtents * 2);
         }
 #endif
 

@@ -8,7 +8,7 @@ namespace FallGuy.Character.States
         [SerializeField] private ClipTransition _startAnimation;
         [SerializeField] private ClipTransition _loopAnimation;
 
-        public override bool CanExitState => false;
+        public override bool CanExitState => Character.IsGrounded == true;
 
         private void OnEnable()
         {

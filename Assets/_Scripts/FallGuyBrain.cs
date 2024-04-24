@@ -45,10 +45,12 @@ namespace FallGuy.Character
 
         private void UpdateCharacterState()
         {
-            if (MovementDirection != default) _moveState.TryEnterState();
-            else Character.StateMachine.TrySetDefaultState();
-
-            if (PlayerInput.Jump) _jumpState.TryEnterState();
+            if (Character.IsGrounded)
+            {
+                if (MovementDirection != default) _moveState.TryEnterState();
+                else Character.StateMachine.TrySetDefaultState();
+                if (PlayerInput.Jump) _jumpState.TryEnterState();
+            }
         }
 
     }
