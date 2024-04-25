@@ -10,7 +10,7 @@ namespace FallGuy.Character.States
         public class StateMachine : StateMachine<CharacterState>.WithDefault { }
 
         [SerializeField] private Character _character;
-        
+
         public Character Character
         {
             get => _character;
@@ -23,6 +23,14 @@ namespace FallGuy.Character.States
         }
 
         public StateMachine<CharacterState> OwnerStateMachine => _character.StateMachine;
-        protected static bool WantsRun => PlayerInput.Wasd != default;
+        protected void AddExtraGravity()
+        {
+            var rigid = Character.Rigidbody;
+            if (rigid.velocity.y < 0)
+            {
+                rigid.velocity += Character.Parameters.FallGravityMultiplier
+                * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
+            }
+        }
     }
 }

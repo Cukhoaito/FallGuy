@@ -654,7 +654,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0a02d5879384a704a872db61d104da20,
         type: 3}
       propertyPath: m_Name
-      value: Model
+      value: Body
       objectReference: {fileID: 0}
     - target: {fileID: 2103025869332691237, guid: 0a02d5879384a704a872db61d104da20,
         type: 3}
@@ -714,6 +714,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1228611351}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a02d5879384a704a872db61d104da20,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1228611352}
   m_SourcePrefab: {fileID: 100100000, guid: 0a02d5879384a704a872db61d104da20, type: 3}
 --- !u!4 &665090197 stripped
 Transform:
@@ -796,6 +800,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 665090198}
   _ActionOnDisable: 0
+--- !u!114 &1228611352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228611350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d42436c1522a07429f4a7ae760ff77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _platformLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _collider: {fileID: 1550037331}
 --- !u!1 &1243944712
 GameObject:
   m_ObjectHideFlags: 0
@@ -808,6 +828,7 @@ GameObject:
   - component: {fileID: 1243944714}
   - component: {fileID: 1243944715}
   - component: {fileID: 1243944716}
+  - component: {fileID: 1243944717}
   m_Layer: 0
   m_Name: Brain
   m_TagString: Untagged
@@ -846,6 +867,7 @@ MonoBehaviour:
   _movementDirection: {x: 0, y: 0, z: 0}
   _moveState: {fileID: 1243944715}
   _jumpState: {fileID: 1243944716}
+  _fallState: {fileID: 1243944717}
 --- !u!114 &1243944715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -920,6 +942,30 @@ MonoBehaviour:
       type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
+  _coyoteTime: 0.3
+--- !u!114 &1243944717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243944712}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3e37994d2c1744e9889e1f11d6c681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _character: {fileID: 1550037328}
+  _animation:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -6085794973366503286, guid: 0a02d5879384a704a872db61d104da20,
+      type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
 --- !u!1 &1550037326
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,9 +976,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1550037327}
   - component: {fileID: 1550037329}
+  - component: {fileID: 1550037331}
   - component: {fileID: 1550037328}
   - component: {fileID: 1550037330}
-  - component: {fileID: 1550037331}
   m_Layer: 0
   m_Name: FallGuy
   m_TagString: Untagged
@@ -949,7 +995,7 @@ Transform:
   m_GameObject: {fileID: 1550037326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.63, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -970,14 +1016,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d6b85c450fef840af797c2155edb5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _platformLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  _body: {fileID: 1228611352}
   _rigid: {fileID: 1550037329}
-  _collider: {fileID: 1550037331}
   _animancer: {fileID: 1228611351}
   _brain: {fileID: 1243944714}
   _parameters:
+    _jumpForce: 6
+    _fallGravityMultiplier: 1
     _runSpeed: 6
     _runAcceleration: 4
     _turnSmoothTime: 0.1
