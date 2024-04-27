@@ -1,5 +1,5 @@
-using System;
 using Animancer;
+using Animancer.Units;
 using UnityEngine;
 
 namespace FallGuy.Character.States
@@ -8,28 +8,45 @@ namespace FallGuy.Character.States
     {
         [SerializeField] private ClipTransition _startAnimation;
         [SerializeField] private ClipTransition _loopAnimation;
-        [SerializeField] private float _coyoteTime = 0.3f;
+        [SerializeField, Seconds, Min(0)] private float _coyoteTime = 0.3f;
+        private float _jumpTimer;
         private float _currentTurnVelocity;
+        private bool CanJump => _jumpTimer <= Time.time;
 
         public float CoyoteTime => _coyoteTime;
-        public override bool CanEnterState => Character.StateMachine.CurrentState != this;
-        public override bool CanExitState => Character.Body.IsGrounded;
+        public override bool CanEnterState
+        => Character.StateMachine.CurrentState != this && CanJump;
+        public override bool CanExitState
+        => Character.Body.OnGround && Character.Rigidbody.velocity.y <= 0;
+
 
         private void OnEnable()
         {
             var velocity = Character.Rigidbody.velocity;
-            Character.Rigidbody.velocity = new Vector3(velocity.x, Character.Parameters.JumpForce, velocity.z);
+            Character.Rigidbody.velocity =
+            new Vector3(velocity.x, Character.Parameters.JumpForce, velocity.z);
             PlayStartAnimation();
         }
         private void Update()
         {
             UpdateTurning();
         }
+
+        private void FixedUpdate()
+        {
+            Movement();
+            AddExtraGravity();
+        }
+        public override void OnExitState()
+        {
+            base.OnExitState();
+            _jumpTimer = Time.time + Character.Parameters.JumpDelay;
+        }
+
         private void UpdateTurning()
         {
             var movementDirection = Character.Brain.MovementDirection;
             if (movementDirection == default) return;
-
 
             var targetAngle = Mathf.Atan2(movementDirection.x, movementDirection.z) * Mathf.Rad2Deg;
             var trans = Character.Body.Transform;
@@ -50,11 +67,7 @@ namespace FallGuy.Character.States
 
             Character.Rigidbody.AddForce(accelerationVector);
         }
-        private void FixedUpdate()
-        {
-            Movement();
-            AddExtraGravity();
-        }
+
 
         private void PlayLoopAnimation()
         {

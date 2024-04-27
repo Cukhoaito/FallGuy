@@ -14,9 +14,6 @@ namespace FallGuy.Character.States
         {
             Character.Animancer.Play(_animation);
         }
-        // public bool TookOneStep => _animation.State.Parameter.x >= 0.1 && _animation.State.Parameter.x <= 0.2;
-        // public override bool CanExitState => TookOneStep;
-
         private void Update()
         {
             UpdateAnimation();

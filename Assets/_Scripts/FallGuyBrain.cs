@@ -10,6 +10,7 @@ namespace FallGuy.Character
         [SerializeField] private CharacterState _moveState;
         [SerializeField] private CharacterState _jumpState;
         [SerializeField] private CharacterState _fallState;
+
         private Camera _mainCamera;
 
         private void Start()
@@ -45,7 +46,7 @@ namespace FallGuy.Character
 
         private void UpdateCharacterState()
         {
-            if (Character.Body.IsGrounded)
+            if (Character.Body.OnGround)
             {
                 if (MovementDirection != default) _moveState.TryEnterState();
                 else Character.StateMachine.TrySetDefaultState();

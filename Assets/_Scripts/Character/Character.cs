@@ -5,6 +5,7 @@ using FallGuy.Character.States;
 
 namespace FallGuy.Character
 {
+    [DefaultExecutionOrder(-10000)]
     public sealed class Character : MonoBehaviour
     {
         [SerializeField] private CharacterBody _body;

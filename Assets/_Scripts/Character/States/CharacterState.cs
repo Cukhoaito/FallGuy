@@ -28,7 +28,7 @@ namespace FallGuy.Character.States
             var rigid = Character.Rigidbody;
             if (rigid.velocity.y < 0)
             {
-                rigid.velocity += Character.Parameters.FallGravityMultiplier
+                rigid.velocity += Character.Parameters.GravityMutipler
                 * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
             }
         }

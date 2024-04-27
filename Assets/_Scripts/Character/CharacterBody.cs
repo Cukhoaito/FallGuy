@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 namespace FallGuy.Character
 {
@@ -9,7 +10,7 @@ namespace FallGuy.Character
         public Collider Collider => _collider;
 
         public Transform Transform => transform;
-        public bool IsGrounded
+        public bool OnGround
         {
             get
             {
@@ -17,16 +18,15 @@ namespace FallGuy.Character
                 var bounds = _collider.bounds;
 
                 var boxCenter = bounds.center;
-                var halfExtents = bounds.extents;
-
+                var halfExtents = bounds.extents / Mathf.Sqrt(2);
                 halfExtents.y = boxHeight;
-
-                var maxDistance = bounds.extents.y;
+                var maxDistance = bounds.extents.y + boxHeight;
+                
                 var isCollider = Physics.BoxCast(
                     boxCenter,
                     halfExtents,
                     Vector3.down,
-                    transform.rotation,
+                    Transform.rotation,
                     maxDistance,
                     _platformLayer
                 );
@@ -47,15 +47,17 @@ namespace FallGuy.Character
         private void OnDrawGizmos()
         {
             const float boxHeight = .05f;
-            var color = IsGrounded ? Color.green : Color.red;
+            var color = OnGround ? Color.green : Color.red;
             Gizmos.color = color;
             var bounds = _collider.bounds;
 
             var boxCenter = bounds.center;
             var halfExtents = bounds.extents;
             var extentY = halfExtents.y;
+            halfExtents /= Mathf.Sqrt(2);
             halfExtents.y = boxHeight;
-            Gizmos.DrawWireCube(boxCenter - new Vector3(0, extentY + boxHeight, 0), halfExtents * 2);
+
+            Gizmos.DrawWireCube(boxCenter - new Vector3(0, extentY + boxHeight, 0), 2 * halfExtents);
         }
 #endif
     }

@@ -6,7 +6,6 @@ namespace FallGuy.Character
     {
         [SerializeField] private Character _character;
         [SerializeField] private Vector3 _movementDirection;
-
         public Character Character
         {
             get => _character;
