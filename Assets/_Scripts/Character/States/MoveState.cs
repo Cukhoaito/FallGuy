@@ -17,7 +17,7 @@ namespace FallGuy.Character.States
         private void Update()
         {
             UpdateAnimation();
-            UpdateTurning();
+            Turning(Character.Brain.MovementDirection);
         }
 
         private void UpdateAnimation()
@@ -42,19 +42,6 @@ namespace FallGuy.Character.States
             return new Vector2(speedRatio, angle == 0 ? 0 : (angle > 0 ? 1 : -1));
         }
 
-        private void UpdateTurning()
-        {
-            var movementDirection = Character.Brain.MovementDirection;
-            if (movementDirection == default) return;
-
-
-            var targetAngle = Mathf.Atan2(movementDirection.x, movementDirection.z) * Mathf.Rad2Deg;
-            var trans = Character.Body.Transform;
-            var angle = Mathf.SmoothDampAngle(trans.eulerAngles.y, targetAngle, ref _currentTurnVelocity,
-                Character.Parameters.TurnSmoothTime);
-            trans.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
-        }
-
 
         private void FixedUpdate()
         {
@@ -65,14 +52,9 @@ namespace FallGuy.Character.States
                 return;
             }
 
-            var speed = Character.Parameters.RunSpeed;
-            var acceleration = Character.Parameters.RunAcceleration;
-
-            var targetVelocity = movementDirection * speed;
-            var currentVelocity = Character.Rigidbody.velocity;
-            var accelerationVector = (targetVelocity - currentVelocity) * acceleration;
-
-            Character.Rigidbody.AddForce(accelerationVector);
+            Movement(movementDirection, 
+                Character.Parameters.RunSpeed, 
+                Character.Parameters.RunAcceleration);
         }
     }
 }

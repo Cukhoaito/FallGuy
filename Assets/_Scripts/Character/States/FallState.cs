@@ -7,15 +7,14 @@ namespace FallGuy.Character.States
     {
         [SerializeField] private ClipTransition _animation;
         public override bool CanExitState => Character.Body.OnGround;
-
         private void OnEnable()
         {
             Character.Rigidbody.velocity = default;
             Character.Animancer.Play(_animation);
         }
-        private void Update()
+        private void FixedUpdate()
         {
-            AddExtraGravity();
+            ExtraGravity(Character.Parameters.GravityMutipler);
         }
     }
 }

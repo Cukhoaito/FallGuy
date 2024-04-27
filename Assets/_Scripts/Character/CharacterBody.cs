@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 namespace FallGuy.Character
 {
@@ -21,7 +20,7 @@ namespace FallGuy.Character
                 var halfExtents = bounds.extents / Mathf.Sqrt(2);
                 halfExtents.y = boxHeight;
                 var maxDistance = bounds.extents.y + boxHeight;
-                
+
                 var isCollider = Physics.BoxCast(
                     boxCenter,
                     halfExtents,

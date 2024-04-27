@@ -43,8 +43,6 @@ namespace FallGuy.Character
 
         public readonly CharacterState.StateMachine StateMachine = new();
 
-
-
         private void Awake()
         {
             StateMachine.DefaultState = _defaultState;
