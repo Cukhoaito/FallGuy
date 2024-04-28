@@ -9,12 +9,8 @@ namespace FallGuy.Character.States
 
         private void OnEnable()
         {
-            Character.Animancer.Play(_animation);
-        }
-
-        private void FixedUpdate()
-        {
             Character.Rigidbody.velocity = default;
+            Character.Animancer.Play(_animation);
         }
     }
 }

@@ -13,7 +13,6 @@ namespace FallGuy.Character
         public float JumpDelay => _jumpDelay;
         [SerializeField, Multiplier, Min(0)] private float _gravityMutiplier = 2f;
         public float GravityMutipler => _gravityMutiplier;
-
         [SerializeField, MetersPerSecond, Min(0)] private float _runSpeed = 4f;
         public float RunSpeed => _runSpeed;
 

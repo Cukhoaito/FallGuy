@@ -9,22 +9,18 @@ namespace FallGuy.Character.States
         [SerializeField] private ClipTransition _startAnimation;
         [SerializeField] private ClipTransition _loopAnimation;
         [SerializeField, Seconds, Min(0)] private float _coyoteTime = 0.3f;
+        public float CoyoteTime => _coyoteTime;
         private float _jumpTimer;
-        private float _currentTurnVelocity;
         private bool CanJump => _jumpTimer <= Time.time;
 
-        public float CoyoteTime => _coyoteTime;
         public override bool CanEnterState
             => Character.StateMachine.CurrentState != this && CanJump;
         public override bool CanExitState
             => Character.Body.OnGround && Character.Rigidbody.velocity.y <= 0;
 
-
         private void OnEnable()
         {
-            var velocity = Character.Rigidbody.velocity;
-            Character.Rigidbody.velocity =
-                new Vector3(velocity.x, Character.Parameters.JumpForce, velocity.z);
+            Jump(Character.Parameters.JumpForce);
             PlayStartAnimation();
         }
         private void Update()
@@ -55,6 +51,12 @@ namespace FallGuy.Character.States
         {
             var state = Character.Animancer.Play(_startAnimation);
             state.Events.OnEnd = PlayLoopAnimation;
+        }
+        private void Jump(float force)
+        {
+            var velocity = Character.Rigidbody.velocity;
+            Character.Rigidbody.velocity =
+                new Vector3(velocity.x, force, velocity.z);
         }
     }
 }

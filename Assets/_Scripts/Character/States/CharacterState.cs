@@ -32,7 +32,7 @@ namespace FallGuy.Character.States
         {
             if (gravityMutipler == 0f) return;
             var rigid = Character.Rigidbody;
-            if (rigid.velocity.y < 0)
+            if (rigid.velocity.y <= 0)
             {
                 rigid.velocity += gravityMutipler
                     * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
@@ -40,12 +40,18 @@ namespace FallGuy.Character.States
         }
         protected virtual void Movement(Vector3 direction, float speed, float acceleration)
         {
-            if (direction == default) return;
+            var surfaceNormal = Character.Body.SurfaceNormal;
+            var onSlope = surfaceNormal != Vector3.up && surfaceNormal != default;
+            if (onSlope) direction = Vector3.ProjectOnPlane(direction, surfaceNormal);
             var targetVelocity = direction * speed;
             var currentVelocity = Character.Rigidbody.velocity;
             var accelerationVector = (targetVelocity - currentVelocity) * acceleration;
 
             Character.Rigidbody.AddForce(accelerationVector);
+        }
+        private Vector3 CollideAndSlide(Vector3 vel, Vector3 pos, int depth)
+        {
+            return default;
         }
         protected virtual void Turning(Vector3 direction)
         {

@@ -9,7 +9,6 @@ namespace FallGuy.Character.States
         [SerializeField] private float _fadeSpeed = 3f;
 
         [SerializeField] private MixerTransition2D _animation;
-        private float _currentTurnVelocity;
         private void OnEnable()
         {
             Character.Animancer.Play(_animation);
@@ -29,7 +28,8 @@ namespace FallGuy.Character.States
             );
         }
 
-        private float GetCurrentSpeed() => Character.Rigidbody.velocity.magnitude;
+        private float GetCurrentSpeed()
+            => Character.Rigidbody.velocity.magnitude;
 
         private Vector2 GetAnimationTarget()
         {
@@ -52,8 +52,8 @@ namespace FallGuy.Character.States
                 return;
             }
 
-            Movement(movementDirection, 
-                Character.Parameters.RunSpeed, 
+            Movement(movementDirection,
+                Character.Parameters.RunSpeed,
                 Character.Parameters.RunAcceleration);
         }
     }
