@@ -32,27 +32,22 @@ namespace FallGuy.Character.States
         {
             if (gravityMutipler == 0f) return;
             var rigid = Character.Rigidbody;
-            if (rigid.velocity.y <= 0)
-            {
-                rigid.velocity += gravityMutipler
-                    * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
-            }
+            var needVelocity = Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
+            if (rigid.velocity.y <= 0) needVelocity *= gravityMutipler;
+            rigid.velocity += needVelocity;
         }
         protected virtual void Movement(Vector3 direction, float speed, float acceleration)
         {
             var surfaceNormal = Character.Body.SurfaceNormal;
-            var onSlope = surfaceNormal != Vector3.up && surfaceNormal != default;
-            if (onSlope) direction = Vector3.ProjectOnPlane(direction, surfaceNormal);
-            var targetVelocity = direction * speed;
+            var targetVelocity = speed * direction;
             var currentVelocity = Character.Rigidbody.velocity;
-            var accelerationVector = (targetVelocity - currentVelocity) * acceleration;
+            var accel = (targetVelocity - currentVelocity) * acceleration;
 
-            Character.Rigidbody.AddForce(accelerationVector);
+            var onSlope = surfaceNormal != Vector3.up && surfaceNormal != default;
+            if (onSlope) accel = Vector3.ProjectOnPlane(accel, surfaceNormal);
+            Character.Rigidbody.AddForce(accel);
         }
-        private Vector3 CollideAndSlide(Vector3 vel, Vector3 pos, int depth)
-        {
-            return default;
-        }
+
         protected virtual void Turning(Vector3 direction)
         {
             if (direction == default) return;

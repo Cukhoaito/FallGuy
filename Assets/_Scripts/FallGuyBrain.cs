@@ -7,12 +7,10 @@ namespace FallGuy.Character
 {
     public sealed class FallGuyBrain : CharacterBrain
     {
-        [SerializeField] private CharacterState _moveState;
+        [SerializeField] private CharacterState _locomontionState;
         [SerializeField] private CharacterState _jumpState;
         [SerializeField] private CharacterState _fallState;
-
         private Camera _mainCamera;
-
         private void Start()
         {
             _mainCamera = Camera.main;
@@ -21,6 +19,7 @@ namespace FallGuy.Character
 
         private void Update()
         {
+            // Debug.Log(Character.Rigidbody.velocity.magnitude);
             UpdateMovementDirection();
             UpdateCharacterState();
         }
@@ -48,7 +47,7 @@ namespace FallGuy.Character
         {
             if (Character.Body.OnGround)
             {
-                if (MovementDirection != default) _moveState.TryEnterState();
+                if (MovementDirection != default) _locomontionState.TryEnterState();
                 else Character.StateMachine.TrySetDefaultState();
                 if (PlayerInput.Jump) _jumpState.TryEnterState();
             }

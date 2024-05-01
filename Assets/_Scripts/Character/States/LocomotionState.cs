@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FallGuy.Character.States
 {
-    public class MoveState : CharacterState
+    public class LocomotionState : CharacterState
     {
         [SerializeField] private float _fadeSpeed = 3f;
 
@@ -27,34 +27,28 @@ namespace FallGuy.Character.States
                 _fadeSpeed * Time.deltaTime
             );
         }
-
-        private float GetCurrentSpeed()
-            => Character.Rigidbody.velocity.magnitude;
-
         private Vector2 GetAnimationTarget()
         {
             var angle = Mathf.RoundToInt(Vector2.SignedAngle(
                 Character.Brain.MovementDirection.ToVector2(),
                 Character.Body.FaceDirection.ToVector2()
             ));
-            var maxSpeed = Character.Parameters.RunSpeed;
-            var speedRatio = Mathf.InverseLerp(0, maxSpeed, GetCurrentSpeed());
-            return new Vector2(speedRatio, angle == 0 ? 0 : (angle > 0 ? 1 : -1));
+            var maxSpeed = Character.Parameters.MaxSpeed;
+            var currentSpeed = Character.Rigidbody.velocity.magnitude;
+            var speedRatio = Mathf.InverseLerp(0, maxSpeed, currentSpeed);
+            // return new Vector2(speedRatio, angle == 0 ? 0 : (angle > 0 ? 1 : -1));
+            return new Vector2(speedRatio, 0);
+
         }
 
 
         private void FixedUpdate()
         {
             var movementDirection = Character.Brain.MovementDirection;
-            if (movementDirection == default)
-            {
-                Character.Rigidbody.velocity = default;
-                return;
-            }
-
+            if (movementDirection == default) return;
             Movement(movementDirection,
-                Character.Parameters.RunSpeed,
-                Character.Parameters.RunAcceleration);
+                Character.Parameters.MaxSpeed,
+                Character.Parameters.Acceleration);
         }
     }
 }

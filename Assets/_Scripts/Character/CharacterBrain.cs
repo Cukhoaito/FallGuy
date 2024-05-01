@@ -22,10 +22,7 @@ namespace FallGuy.Character
                     value.Brain = this;
                     enabled = true;
                 }
-                else
-                {
-                    enabled = false;
-                }
+                else enabled = false;
             }
         }
         public Vector3 MovementDirection

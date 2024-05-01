@@ -18,7 +18,6 @@ namespace FallGuy.Character
         public AnimancerComponent Animancer => _animancer;
         [SerializeField] private CharacterBrain _brain;
 
-
         public CharacterBrain Brain
         {
             get => _brain;
@@ -46,6 +45,7 @@ namespace FallGuy.Character
         private void Awake()
         {
             StateMachine.DefaultState = _defaultState;
+            Rigidbody.freezeRotation = true;
         }
     }
 }

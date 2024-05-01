@@ -17,7 +17,10 @@ namespace FallGuy.Character.States
             => Character.StateMachine.CurrentState != this && CanJump;
         public override bool CanExitState
             => Character.Body.OnGround && Character.Rigidbody.velocity.y <= 0;
-
+        private void Awake()
+        {
+            _startAnimation.Events.OnEnd = PlayLoopAnimation;
+        }
         private void OnEnable()
         {
             Jump(Character.Parameters.JumpForce);
@@ -30,10 +33,11 @@ namespace FallGuy.Character.States
 
         private void FixedUpdate()
         {
-            ExtraGravity(Character.Parameters.GravityMutipler);
             Movement(Character.Brain.MovementDirection,
-                Character.Parameters.RunSpeed,
-                Character.Parameters.RunAcceleration);
+                Character.Parameters.MaxSpeed,
+                Character.Parameters.Acceleration);
+            ExtraGravity(Character.Parameters.GravityScale);
+
         }
         public override void OnExitState()
         {
@@ -43,14 +47,12 @@ namespace FallGuy.Character.States
 
         private void PlayLoopAnimation()
         {
-            var state = Character.Animancer.Play(_loopAnimation);
-            state.Events.OnEnd = PlayStartAnimation;
+            Character.Animancer.Play(_loopAnimation);
         }
 
         private void PlayStartAnimation()
         {
-            var state = Character.Animancer.Play(_startAnimation);
-            state.Events.OnEnd = PlayLoopAnimation;
+            Character.Animancer.Play(_startAnimation);
         }
         private void Jump(float force)
         {
