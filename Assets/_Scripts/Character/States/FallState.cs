@@ -14,7 +14,7 @@ namespace FallGuy.Character.States
         }
         private void FixedUpdate()
         {
-            ExtraGravity(Character.Parameters.GravityScale);
+            ExtraGravity(Character.Parameters.GravityMutiplier);
         }
     }
 }

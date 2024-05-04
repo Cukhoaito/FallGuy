@@ -31,21 +31,27 @@ namespace FallGuy.Character.States
         protected virtual void ExtraGravity(float gravityMutipler)
         {
             if (gravityMutipler == 0f) return;
-            var rigid = Character.Rigidbody;
-            var needVelocity = Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
-            if (rigid.velocity.y <= 0) needVelocity *= gravityMutipler;
-            rigid.velocity += needVelocity;
+            var rb = Character.Rigidbody;
+            if (rb.velocity.y <= 0)
+                rb.velocity += gravityMutipler * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
         }
-        protected virtual void Movement(Vector3 direction, float speed, float acceleration)
+        protected virtual void Movement(Vector3 direction, float speed, float acceleration, bool ignoreGravity = false)
         {
-            var surfaceNormal = Character.Body.SurfaceNormal;
-            var targetVelocity = speed * direction;
-            var currentVelocity = Character.Rigidbody.velocity;
-            var accel = (targetVelocity - currentVelocity) * acceleration;
 
-            var onSlope = surfaceNormal != Vector3.up && surfaceNormal != default;
-            if (onSlope) accel = Vector3.ProjectOnPlane(accel, surfaceNormal);
-            Character.Rigidbody.AddForce(accel);
+            var currentVelocity = Character.Rigidbody.velocity;
+            var targetVelocity = speed * direction;
+            targetVelocity.y = currentVelocity.y;
+            var force = (targetVelocity - currentVelocity) * acceleration;
+            force = ForceToSlope(force, Character.Body.SurfaceNormal);
+            if (ignoreGravity && currentVelocity.y == 0) force -= Physics.gravity;
+            Character.Rigidbody.AddForce(force);
+
+            static Vector3 ForceToSlope(Vector3 force, Vector3 surfaceNormal)
+            {
+                var onSlope = surfaceNormal != Vector3.up && surfaceNormal != default;
+                if (onSlope) return Vector3.ProjectOnPlane(force, surfaceNormal);
+                return force;
+            }
         }
 
         protected virtual void Turning(Vector3 direction)

@@ -1,5 +1,4 @@
 using Animancer;
-using Animancer.Units;
 using UnityEngine;
 
 namespace FallGuy.Character.States
@@ -8,41 +7,55 @@ namespace FallGuy.Character.States
     {
         [SerializeField] private ClipTransition _startAnimation;
         [SerializeField] private ClipTransition _loopAnimation;
-        [SerializeField, Seconds, Min(0)] private float _coyoteTime = 0.3f;
-        public float CoyoteTime => _coyoteTime;
-        private float _jumpTimer;
-        private bool CanJump => _jumpTimer <= Time.time;
+        private float _nonCheckGroundHeight;
+        private bool _needCheckGround;
+        private float _jumpDelay;
+        private bool OverDelay => _jumpDelay <= Time.time;
 
         public override bool CanEnterState
-            => Character.StateMachine.CurrentState != this && CanJump;
-        public override bool CanExitState
-            => Character.Body.OnGround && Character.Rigidbody.velocity.y <= 0;
+            => Character.StateMachine.CurrentState != this && OverDelay;
+        public override bool CanExitState => OnGround();
         private void Awake()
         {
             _startAnimation.Events.OnEnd = PlayLoopAnimation;
         }
         private void OnEnable()
         {
-            Jump(Character.Parameters.JumpForce);
+            var offset = 0.2f;
+            _needCheckGround = false;
+            _nonCheckGroundHeight = Character.transform.position.y + Character.Body.CheckGroundDistance + offset;
+            Jump();
             PlayStartAnimation();
         }
+
         private void Update()
         {
             Turning(Character.Brain.MovementDirection);
         }
 
+        private bool OnGround()
+        {
+            if (_needCheckGround) return Character.Body.OnGround;
+            return false;
+        }
+
         private void FixedUpdate()
         {
+            if (!_needCheckGround)
+                _needCheckGround = Character.transform.position.y > _nonCheckGroundHeight
+                || Character.Rigidbody.velocity.y <= 0;
+
             Movement(Character.Brain.MovementDirection,
-                Character.Parameters.MaxSpeed,
-                Character.Parameters.Acceleration);
-            ExtraGravity(Character.Parameters.GravityScale);
+                 Character.Parameters.RunSpeed,
+                 Character.Parameters.Acceleration);
+            ExtraGravity(Character.Parameters.GravityMutiplier);
 
         }
+
         public override void OnExitState()
         {
             base.OnExitState();
-            _jumpTimer = Time.time + Character.Parameters.JumpDelay;
+            _jumpDelay = Time.time + Character.Parameters.JumpDelay;
         }
 
         private void PlayLoopAnimation()
@@ -54,11 +67,13 @@ namespace FallGuy.Character.States
         {
             Character.Animancer.Play(_startAnimation);
         }
-        private void Jump(float force)
+        private void Jump()
         {
-            var velocity = Character.Rigidbody.velocity;
-            Character.Rigidbody.velocity =
-                new Vector3(velocity.x, force, velocity.z);
+            var rb = Character.Rigidbody;
+            var upVelocity = Mathf.Sqrt(
+                2 * Character.Parameters.JumpHeight
+                * Mathf.Abs(Physics.gravity.y));
+            Character.Rigidbody.velocity = new Vector3(rb.velocity.x, upVelocity, rb.velocity.y);
         }
     }
 }

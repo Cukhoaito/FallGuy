@@ -33,22 +33,22 @@ namespace FallGuy.Character.States
                 Character.Brain.MovementDirection.ToVector2(),
                 Character.Body.FaceDirection.ToVector2()
             ));
-            var maxSpeed = Character.Parameters.MaxSpeed;
+            var maxSpeed = Character.Parameters.RunSpeed;
             var currentSpeed = Character.Rigidbody.velocity.magnitude;
             var speedRatio = Mathf.InverseLerp(0, maxSpeed, currentSpeed);
             // return new Vector2(speedRatio, angle == 0 ? 0 : (angle > 0 ? 1 : -1));
             return new Vector2(speedRatio, 0);
 
         }
-
-
         private void FixedUpdate()
         {
             var movementDirection = Character.Brain.MovementDirection;
             if (movementDirection == default) return;
             Movement(movementDirection,
-                Character.Parameters.MaxSpeed,
-                Character.Parameters.Acceleration);
+                Character.Parameters.RunSpeed,
+                Character.Parameters.Acceleration,
+                true
+            );
         }
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FallGuy.Extenstion
+namespace FallGuy.Utilities
 {
     [ExecuteAlways]
     public sealed class OrbitControls : MonoBehaviour

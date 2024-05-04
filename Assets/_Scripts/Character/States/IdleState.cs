@@ -12,7 +12,6 @@ namespace FallGuy.Character.States
         [SerializeField, Seconds] private float _minRandomizeInterval = 0;
         [SerializeField, Seconds] private float _maxRandomizeInerval = 20;
         [SerializeField] private ClipTransition[] _randomAnimations;
-        private bool _justStarted;
         private float _randomizeTime;
         public override bool CanEnterState => Character.Body.OnGround;
         private void Awake()
@@ -25,8 +24,8 @@ namespace FallGuy.Character.States
         }
         private void OnEnable()
         {
-
             PlayMainAnimation();
+            Character.Rigidbody.velocity = default;
             _randomizeTime += _firstRandomizeDelay;
         }
         private void PlayMainAnimation()
@@ -45,8 +44,6 @@ namespace FallGuy.Character.States
         }
         private void FixedUpdate()
         {
-            // Movement(Vector3.zero, 0, Character.Parameters.Deceleration);
-            Character.Rigidbody.velocity = default;
             var state = Character.Animancer.States.Current;
 
             if (_randomAnimations.Length == 0) return;

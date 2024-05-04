@@ -1,4 +1,3 @@
-using System;
 using Animancer.FSM;
 using FallGuy.Character.States;
 using UnityEngine;
@@ -16,14 +15,11 @@ namespace FallGuy.Character
             _mainCamera = Camera.main;
             Character.StateMachine.TrySetDefaultState();
         }
-
         private void Update()
         {
-            // Debug.Log(Character.Rigidbody.velocity.magnitude);
             UpdateMovementDirection();
             UpdateCharacterState();
         }
-
         private void UpdateMovementDirection()
         {
             var input = PlayerInput.Wasd;
@@ -42,7 +38,6 @@ namespace FallGuy.Character
             else MovementDirection = default;
 
         }
-
         private void UpdateCharacterState()
         {
             if (Character.Body.OnGround)
@@ -56,6 +51,5 @@ namespace FallGuy.Character
                 _fallState.TryEnterState();
             }
         }
-
     }
 }
