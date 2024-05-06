@@ -48,7 +48,9 @@ namespace FallGuy.Character.States
             Movement(Character.Brain.MovementDirection,
                  Character.Parameters.RunSpeed,
                  Character.Parameters.Acceleration);
-            ExtraGravity(Character.Parameters.GravityMutiplier);
+
+            if (Character.Rigidbody.velocity.y <= 0)
+                AddGravity(Character.Parameters.GravityMutiplier);
 
         }
 

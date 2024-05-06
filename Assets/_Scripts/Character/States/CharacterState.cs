@@ -28,14 +28,14 @@ namespace FallGuy.Character.States
             => _character.StateMachine;
 
 
-        protected virtual void ExtraGravity(float gravityMutipler)
+        protected virtual void AddGravity(float gravityMutipler)
         {
             if (gravityMutipler == 0f) return;
             var rb = Character.Rigidbody;
-            if (rb.velocity.y <= 0)
-                rb.velocity += gravityMutipler * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
+            rb.velocity += gravityMutipler * Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
         }
-        protected virtual void Movement(Vector3 direction, float speed, float acceleration, bool ignoreGravity = false)
+        protected virtual void Movement(Vector3 direction, float speed,
+            float acceleration, bool ignoreGravity = false)
         {
 
             var currentVelocity = Character.Rigidbody.velocity;
