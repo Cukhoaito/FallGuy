@@ -17,6 +17,7 @@ namespace FallGuy.Character
         }
         private void Update()
         {
+            var test = Character.Body.FaceSurfaceNormal;
             UpdateMovementDirection();
             UpdateCharacterState();
         }

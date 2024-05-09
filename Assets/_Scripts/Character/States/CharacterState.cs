@@ -42,7 +42,7 @@ namespace FallGuy.Character.States
             var targetVelocity = speed * direction;
             targetVelocity.y = currentVelocity.y;
             var force = (targetVelocity - currentVelocity) * acceleration;
-            force = ForceToSlope(force, Character.Body.SurfaceNormal);
+            force = ForceToSlope(force, Character.Body.GroundSurfaceNormal);
             if (ignoreGravity && currentVelocity.y == 0) force -= Physics.gravity;
             Character.Rigidbody.AddForce(force);
 

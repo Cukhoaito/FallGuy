@@ -25,7 +25,6 @@ namespace FallGuy.Character.States
         private void OnEnable()
         {
             PlayMainAnimation();
-            Character.Rigidbody.velocity = default;
             _randomizeTime += _firstRandomizeDelay;
         }
         private void PlayMainAnimation()
@@ -44,6 +43,7 @@ namespace FallGuy.Character.States
         }
         private void FixedUpdate()
         {
+            Character.Rigidbody.velocity = default;
             var state = Character.Animancer.States.Current;
 
             if (_randomAnimations.Length == 0) return;

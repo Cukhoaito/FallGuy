@@ -46,7 +46,7 @@ namespace FallGuy.Character.States
                 || Character.Rigidbody.velocity.y <= 0;
 
             Movement(Character.Brain.MovementDirection,
-                 Character.Parameters.RunSpeed,
+                 Character.Parameters.AirMoveSpeed,
                  Character.Parameters.Acceleration);
 
             if (Character.Rigidbody.velocity.y <= 0)

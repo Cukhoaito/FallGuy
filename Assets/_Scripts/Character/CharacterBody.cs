@@ -12,6 +12,7 @@ namespace FallGuy.Character
         [SerializeField] private CapsuleCollider _collider;
         public CapsuleCollider Collider => _collider;
         public Transform Transform => transform;
+        private RaycastHit _groundHit;
         public bool OnGround
         {
             get
@@ -20,6 +21,7 @@ namespace FallGuy.Character
                 var isCollider = Physics.SphereCast(
                     new Ray(bounds.center, -transform.up),
                     _checkGroundDistance,
+                    out _groundHit,
                     bounds.extents.y,
                     _groundMask,
                     QueryTriggerInteraction.Ignore
@@ -28,22 +30,34 @@ namespace FallGuy.Character
             }
         }
 
-        public Vector3 SurfaceNormal
+        public Vector3 FaceSurfaceNormal
         {
             get
             {
                 var bounds = _collider.bounds;
-                if (Physics.Raycast(
-                    bounds.center,
-                    -transform.up,
-                    out var slopeHit,
-                    bounds.extents.y + _checkGroundDistance * 2,
-                    _groundMask
-                ))
-                    return slopeHit.normal;
-                return default;
+                var onGround = _groundHit.collider != default;
+                var direction = onGround ?
+                    Vector3.ProjectOnPlane(transform.forward, GroundSurfaceNormal) : transform.forward;
+                var offset = -transform.forward * 0.05f;
+                var point1 = bounds.center - transform.up * (bounds.extents.y - _collider.radius) + offset;
+                var point2 = bounds.center + transform.up * (bounds.extents.y - _collider.radius) + offset;
+
+                var distance = bounds.extents.x;
+
+                var isCollider = Physics.CapsuleCast(
+                    point1, point2,
+                    _collider.radius,
+                    direction,
+                    out var faceHit,
+                    distance, _groundMask
+                );
+
+                return isCollider ? faceHit.normal : default;
             }
         }
+
+        public Vector3 GroundSurfaceNormal => OnGround ? _groundHit.normal : default;
+
         public Vector3 FaceDirection
         {
             get
@@ -56,10 +70,14 @@ namespace FallGuy.Character
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            var color = OnGround ? Color.green : Color.red;
-            Gizmos.color = color;
+            var onGround = _groundHit.collider != default;
             var bounds = _collider.bounds;
+            Gizmos.color = onGround ? Color.green : Color.red;
             Gizmos.DrawWireSphere(bounds.center - new Vector3(0, bounds.extents.y, 0), _checkGroundDistance);
+            var form = onGround ? _groundHit.point : bounds.center - transform.up * bounds.extents.y;
+            var direction = onGround ?
+                Vector3.ProjectOnPlane(transform.forward, GroundSurfaceNormal) : transform.forward;
+            Gizmos.DrawRay(form, direction);
         }
 #endif
     }

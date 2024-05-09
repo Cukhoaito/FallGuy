@@ -8,8 +8,12 @@ namespace FallGuy.Character
     public sealed class CharacterParameters
     {
         [Header("Locomotion Settings")]
-        [SerializeField, Min(0)] private float _runSpeed = 8f;
-        public float RunSpeed => _runSpeed;
+        [SerializeField, Min(0)] private float _moveSpeed = 8f;
+        public float MoveSpeed => _moveSpeed;
+
+        [SerializeField, Min(0)] private float _airMoveSpeed = 5f;
+        public float AirMoveSpeed => _airMoveSpeed;
+
         [SerializeField, Min(0)]
         private float _acceleration = 4;
         public float Acceleration => _acceleration;
